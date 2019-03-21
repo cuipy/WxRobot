@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
-from flask import Flask,jsonify,make_response,send_from_directory
+from flask import Flask,jsonify,make_response,send_from_directory,request
 import synonyms
 import json
 import re
@@ -10,8 +10,17 @@ import random
 
 app = Flask(__name__)
 
-@app.route('/jinyi/<word>',methods=['GET','POST'])
-def jinyi(word):
+@app.route('/jinyi',methods=['GET','POST'])
+def jinyi():
+
+    word =request.args.get('word')
+
+    if request.method == 'POST':
+        word = request.form['word']
+
+    if word ==None:
+        return '请提供要取近义的文字，参数名为 word '
+
     str = word
     lstseg = synonyms.seg(str)
     nword=''
