@@ -14,10 +14,16 @@ def test1(word):
 
     nword=''
     for i,str1 in enumerate(lstseg[0]):
-        print('%s = %s'%(str1,lstseg[1][i] ))
-        nstr = _nearby_word(str1)
-        if nstr == '':
+        print('%s = %s'%(str1,lstseg[1][i] ),synonyms.nearby(str1) )
+
+        ignore_cixing = ['nz','nr']
+
+        if lstseg[1][i] in ignore_cixing:
             nstr = str1
+        else:
+            nstr = _nearby_word(str1)
+            if nstr == '':
+                nstr = str1
         nword+= nstr
 
     print('原句：%s\n新句：%s'%(word,nword))
