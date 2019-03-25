@@ -235,7 +235,7 @@ def qingyunke_robot(txt):
 
     return msg
 
-movie_ignore = ['是的','好啊','哈哈哈','哈哈','可以','不错','??','笨蛋']
+movie_ignore = ['是的','好啊','哈哈哈','哈哈','可以','不错','??','笨蛋','谢谢','早上好','滚蛋','傻逼']
 
 # 查找电影
 def search_movie(txt):
