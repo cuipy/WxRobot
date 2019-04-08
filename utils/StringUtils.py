@@ -24,6 +24,12 @@ def md5(bs):
     m5.update( bs )
     return m5.hexdigest()
 
+def sha1hex(data):
+    sha256 = hashlib.sha1()
+    sha256.update(data.encode())
+    res = sha256.hexdigest()
+    return res
+
 # 汉字进行quote转码
 def hanzi_quote(str):
     from urllib import parse

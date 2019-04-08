@@ -16,6 +16,7 @@ import platform
 import random,os
 import datetime
 import asyncio
+import hashlib
 from utils import async_call,MysqlUtils,StringUtils
 
 if platform.system() =='Windows':
@@ -114,7 +115,7 @@ def superuser_reply(msg):
 
         return '已经群发给%d个好友和%d个群' % (fcnt, gcnt)
 
-    return friend_reply(msg)
+    return xiaoi_robot(msg,userId='崔鹏宇')
 
 
 @bot.register(chats=(Friend), msg_types=(RECORDING))
@@ -235,6 +236,25 @@ def qingyunke_robot(txt):
 
     return msg
 
+def xiaoi_robot(txt,userId='客官'):
+    url="http://robot.open.xiaoi.com/ask.do?question=%s&userId=%s&type=0&platform=web"%(txt,userId)
+
+    appKey = "open_oY2gsF6Ueint";
+    appSecret = "srAx9cuHDjaFN2N7zw4v";
+
+    str1 = ':'.join( [appKey,'xiaoi.com',appSecret] )
+    ha1 = StringUtils.sha1hex(str1)
+    ha2 =  StringUtils.sha1hex('GET:/ask.do')
+    nonce = StringUtils.buildRandom("",36)
+
+    sig =  StringUtils.sha1hex( ":".join( [ha1,nonce,ha2]) )
+    h1={'X-Auth':'app_key="'+appKey+'",nonce="'+nonce+'",signature="'+sig+'"'}
+
+    res = getHtmlText(url,header=h1)
+    return res
+
+
+
 movie_ignore = ['是的','好啊','哈哈哈','哈哈','可以','不错','??','笨蛋','谢谢','早上好','滚蛋','傻逼']
 
 # 查找电影
@@ -272,15 +292,15 @@ def get_surl(url):
     return surl
 
 
-def getHtmlText(url, charset='utf-8'):
+def getHtmlText(url, header=None, charset='utf-8'):
     try:
-        r = requests.get(url, timeout=3000)
+        r = requests.get(url, headers=header, timeout=3000)
         r.raise_for_status()
         r.encoding = charset
-        return r.text
+        return r.text.strip()
     except:
         print(r)
-        return ""
+        return "error"
 
 
 def postHtmlText(url, data=None, js=None, charset='utf-8'):
@@ -290,8 +310,8 @@ def postHtmlText(url, data=None, js=None, charset='utf-8'):
         r.encoding = charset
         return r.text
     except:
-        res = r.status_code
-        print('post request %s error status code:%s '%(url,res) )
+
+        print( r )
         return "error"
 
 
@@ -584,6 +604,7 @@ def dongtu(txt):
 
 # 保存所有的Friend 和 Group信息到数据库中
 def save_chater_to_db():
+    global bot
     frds = bot.friends()
     for frd in frds:
         # utils.MysqlUtils.getSession('')
