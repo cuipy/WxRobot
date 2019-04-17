@@ -97,7 +97,7 @@ def superuser_reply(msg):
             for frd in qf_friends:
                 try:
                     frd.send(msg.text[5:])
-                    time.sleep(1)
+                    time.sleep(15)
                 except Exception:
                     print()
                 finally:
@@ -107,7 +107,7 @@ def superuser_reply(msg):
             for grp in qf_groups:
                 try:
                     grp.send(msg.text[4:])
-                    time.sleep(1)
+                    time.sleep(15)
                 except Exception:
                     print()
                 finally:
@@ -115,7 +115,7 @@ def superuser_reply(msg):
 
         return '已经群发给%d个好友和%d个群' % (fcnt, gcnt)
 
-    return xiaoi_robot(msg,userId='崔鹏宇')
+    return friend_reply(msg)
 
 
 @bot.register(chats=(Friend), msg_types=(RECORDING))
