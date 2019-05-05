@@ -45,7 +45,7 @@ bot.enable_puid()
 
 # super user 名称列表
 super_user_names = ['崔鹏宇']
-super_users = bot.friends().in_names(super_user_names)
+super_users = bot.friends().search(super_user_names)
 
 @bot.register(msg_types=NOTE)
 def join_group(msg):
