@@ -17,7 +17,11 @@ import random,os
 import datetime
 import asyncio
 import hashlib
+import configparser
 from utils import async_call,MysqlUtils,StringUtils
+
+cf = configparser.ConfigParser()
+cf.read("config.ini")
 
 if platform.system() =='Windows':
     AudioSegment.converter = r"D:\\apps\\ffmpeg\\bin\\ffmpeg.exe"
@@ -25,11 +29,16 @@ elif platform.system()=='Linux':
     AudioSegment.converter = r"/usr/local/bin/ffmpeg"
 
 """ Baidu AipSpeech 的你的 APPID AK SK """
-APP_ID = '15726960'
-API_KEY = 'UYvaI5wBPpngKIept9VCjEod'
-SECRET_KEY = 'OckYaMV2cU8GZ4m2lli21PnaCcBWlu0G'
+baiduAipSpeech_app_id = cf.get('baidu_aipspeech','app_id')
+baiduAipSpeech_api_key = cf.get('baidu_aipspeech','api_key')
+baiduAipSpeech_secret_key = cf.get('baidu_aipspeech','secret_key')
 
-aipSpeech = AipSpeech(APP_ID, API_KEY, SECRET_KEY)
+
+"""大错dwz参数"""
+dacuo_key=cf.get('robot','dacuo_key')
+dacuo_dwz_api=cf.get('robot','dacuo_dwz_api')
+
+aipSpeech = AipSpeech(baiduAipSpeech_app_id, baiduAipSpeech_api_key, baiduAipSpeech_secret_key)
 
 black_word = ['习近平', '李克强', '习大大', '习主席', '共产党', '操你妈', '妈逼']
 
@@ -37,6 +46,7 @@ str_help = '机器人功能：[呲牙]\n[蜡烛]签名XXXX：各种字体设计�
            '[蜡烛]笑话：我会给你讲个笑话\n[蜡烛]翻译XXX：进行中英文翻译\n[蜡烛]发送语音，我会进行语音识别，当然识别的比较白痴\n'
 
 str_houzhui = '\n[疑问]不会用请输入：帮助\n[强]牛逼的新功能：签名XXX，动图XXXXX'
+movie_ignore = ['是的','好啊','哈哈哈','哈哈','可以','不错','??','笨蛋','谢谢','早上好','滚蛋','傻逼']
 
 
 # 创建mxpy 的Bot对象
@@ -44,7 +54,8 @@ bot = Bot(cache_path=True,console_qr=True)
 bot.enable_puid()
 
 # super user 名称列表
-super_user_names = ['崔鹏宇']
+superUsername=cf.get('robot','super_username')
+super_user_names = superUsername.split('|')
 super_users = bot.friends().search(super_user_names)
 
 @bot.register(msg_types=NOTE)
@@ -236,6 +247,7 @@ def qingyunke_robot(txt):
 
     return msg
 
+# 小i接口，最终是不能用
 def xiaoi_robot(txt,userId='客官'):
     url="http://robot.open.xiaoi.com/ask.do?question=%s&userId=%s&type=0&platform=web"%(txt,userId)
 
@@ -253,10 +265,6 @@ def xiaoi_robot(txt,userId='客官'):
     res = getHtmlText(url,header=h1)
     return res
 
-
-
-movie_ignore = ['是的','好啊','哈哈哈','哈哈','可以','不错','??','笨蛋','谢谢','早上好','滚蛋','傻逼']
-
 # 查找电影
 def search_movie(txt):
 
@@ -269,27 +277,31 @@ def search_movie(txt):
     url = 'http://www.ffilmer.com/video/search/%s.html' % (quote(txt, encoding='utf-8'))
 
     mhtml = getHtmlText(url)
-
     re1 = re.compile('href=\"\/video\/detail\/(\d+?)\.html\">')
     arr = re1.findall(mhtml)
 
     if len(arr) == 0:
         return
 
-    url = get_surl(url)
-    res = '电影《%s》(%d部)：%s' % (txt, len(arr), url)
+    surl = get_surl(url)
+    res = '电影《%s》(%d部)：%s' % (txt, len(arr), surl)
     return res
 
 
 # 长地址，转换为短地址
 def get_surl(url):
     # 接口说明 http://suo.im/
-    api = 'http://suo.im/api.php?url=%s' % (quote(url, encoding='utf-8'))
-    surl = getHtmlText(api)
-    if surl == '' or surl.startswith('showData({'):
-        return url
 
-    return surl
+    api = '%s?key=%s&longurl=%s' % (dacuo_dwz_api,dacuo_key,quote(url, encoding='utf-8'))
+
+    surl = getHtmlText(api)
+    if surl.startswith('{'):
+        print(surl)
+        hjson=json.loads(surl)
+        if hjson['code']==200:
+            return hjson['data']
+
+    return url
 
 
 def getHtmlText(url, header=None, charset='utf-8'):
