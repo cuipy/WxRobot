@@ -104,25 +104,35 @@ def superuser_reply(msg):
         fcnt = 0
         gcnt = 0
 
-        if msg.text.startswith('群发好友：'):
-            for frd in qf_friends:
-                try:
-                    frd.send(msg.text[5:])
-                    time.sleep(15)
-                except Exception:
-                    print()
-                finally:
-                    fcnt += 1
+        hymsg = ''
+        if msg.text.startswith('群发好友'):
+            hymsg = msg.text[4:]
+            if hymsg.startswith(':') or hymsg.startswith('：'):
+                hymsg = hymsg[1:]
 
-        if msg.text.startswith('群发群：'):
-            for grp in qf_groups:
-                try:
-                    grp.send(msg.text[4:])
-                    time.sleep(15)
-                except Exception:
-                    print()
-                finally:
-                    gcnt += 1
+                for frd in qf_friends:
+                    try:
+                        frd.send(hymsg)
+                        time.sleep(15)
+                    except Exception:
+                        print()
+                    finally:
+                        fcnt += 1
+
+        hymsg = ''
+        if msg.text.startswith('群发群'):
+            hymsg = msg.text[3:]
+            if hymsg.startswith(':') or hymsg.startswith('：'):
+                hymsg = hymsg[1:]
+
+                for grp in qf_groups:
+                    try:
+                        grp.send(hymsg)
+                        time.sleep(15)
+                    except Exception:
+                        print()
+                    finally:
+                        gcnt += 1
 
         return '已经群发给%d个好友和%d个群' % (fcnt, gcnt)
 
@@ -164,7 +174,7 @@ def text_msg_reply(msgtxt, isAt, toUser=None):
         return '请不要乱说'
 
     msgtxt = msgtxt.strip(' ').strip(':').strip('：')
-    if msgtxt.find('帮助') >= 0:
+    if msgtxt=='帮助':
         return str_help
 
     if msgtxt.startswith('签名') and toUser:
