@@ -402,7 +402,7 @@ def cangtoushi(txt):
     data = {'word': txt, 'length': 7, 'type': 0, 'mode': 2}
     html = postHtmlText(url, data=data)
 
-    arrshi = re.findall('<div id="verse" class="verse TextCenter P10 F22">([\s\S]+?)<br/></div>', html)
+    arrshi = re.findall('<div id="verse".*?>([\s\S]+?)<br/></div>', html)
 
     if len(arrshi) == 0:
         return '遗憾，出的题目太难，没搞出来，重出一个吧老兄。'
@@ -627,7 +627,7 @@ def save_chater_to_db():
     for grp in grps:
         print('group:%s - %s  - %s - %s   ' % (grp.puid, grp.name,grp.owner.puid,grp.owner.name))
 
-save_chater_to_db()
+# save_chater_to_db()
 
 # 判断一个字符串是否包含数组中的字符
 def strInArray(str, arr):
@@ -676,6 +676,6 @@ def for_1607():
 
         time.sleep(60)
 
-for_1607()
+# for_1607()
 
 embed()
