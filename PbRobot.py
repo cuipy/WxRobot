@@ -110,14 +110,14 @@ def superuser_reply(msg):
             if hymsg.startswith(':') or hymsg.startswith('：'):
                 hymsg = hymsg[1:]
 
-                for frd in qf_friends:
-                    try:
-                        frd.send(hymsg)
-                        time.sleep(15)
-                    except Exception:
-                        print()
-                    finally:
-                        fcnt += 1
+            for frd in qf_friends:
+                try:
+                    frd.send(hymsg)
+                    time.sleep(15)
+                except Exception:
+                    print()
+                finally:
+                    fcnt += 1
 
         hymsg = ''
         if msg.text.startswith('群发群'):
@@ -125,14 +125,14 @@ def superuser_reply(msg):
             if hymsg.startswith(':') or hymsg.startswith('：'):
                 hymsg = hymsg[1:]
 
-                for grp in qf_groups:
-                    try:
-                        grp.send(hymsg)
-                        time.sleep(15)
-                    except Exception:
-                        print()
-                    finally:
-                        gcnt += 1
+            for grp in qf_groups:
+                try:
+                    grp.send(hymsg)
+                    time.sleep(15)
+                except Exception:
+                    print()
+                finally:
+                    gcnt += 1
 
         return '已经群发给%d个好友和%d个群' % (fcnt, gcnt)
 
@@ -234,8 +234,11 @@ def text_msg_reply(msgtxt, isAt, toUser=None):
 
     # 没电影就用 图灵机器人 处理
     if isAt:
-        reply = qingyunke_robot(msgtxt)
+        reply = dzj_robot(msgtxt)
         return reply
+
+def dzj_robot(msgtxt):
+    return '稍等，马上为您接入服务'
 
 # 青云客机器人，老骂人
 def qingyunke_robot(txt):
