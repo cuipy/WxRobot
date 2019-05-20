@@ -88,7 +88,6 @@ def group_reply(msg):
         botname = msg.receiver.name
         msgtxt = msgtxt.replace('@%s'%(botname), '').strip()
 
-
     return text_msg_reply(msgtxt, msg.is_at, toUser=msg.sender)
 
 
@@ -233,12 +232,10 @@ def text_msg_reply(msgtxt, isAt, toUser=None):
             return str
 
     # 没电影就用 图灵机器人 处理
-    if isAt:
-        reply = dzj_robot(msgtxt)
-        return reply
+    # if isAt:
+    #     reply = dzj_robot(msgtxt)
+    #     return reply
 
-def dzj_robot(msgtxt):
-    return '稍等，马上为您接入服务'
 
 # 青云客机器人，老骂人
 def qingyunke_robot(txt):
@@ -633,14 +630,13 @@ def save_chater_to_db():
     frds = bot.friends()
     for frd in frds:
         # utils.MysqlUtils.getSession('')
-
         print('friend:%s - %s  - %s - %s - %s '%( frd.puid,frd.name,frd.sex,frd.province,frd.city ) )
 
     grps = bot.groups()
     for grp in grps:
         print('group:%s - %s  - %s - %s   ' % (grp.puid, grp.name,grp.owner.puid,grp.owner.name))
 
-# save_chater_to_db()
+save_chater_to_db()
 
 # 判断一个字符串是否包含数组中的字符
 def strInArray(str, arr):
