@@ -233,7 +233,7 @@ def text_msg_reply(msgtxt, isAt, toUser=None):
 
     # 没电影就用 图灵机器人 处理
     # if isAt:
-    #     reply = dzj_robot(msgtxt)
+    #     reply = qingyunke_robot(msgtxt)
     #     return reply
 
 
