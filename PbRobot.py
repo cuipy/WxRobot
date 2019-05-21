@@ -627,14 +627,24 @@ def dongtu(txt):
 # 保存所有的Friend 和 Group信息到数据库中
 def save_chater_to_db():
     global bot
-    frds = bot.friends()
-    for frd in frds:
-        # utils.MysqlUtils.getSession('')
-        print('friend:%s - %s  - %s - %s - %s '%( frd.puid,frd.name,frd.sex,frd.province,frd.city ) )
 
-    grps = bot.groups()
-    for grp in grps:
-        print('group:%s - %s  - %s - %s   ' % (grp.puid, grp.name,grp.owner.puid,grp.owner.name))
+    try:
+        frds = bot.friends()
+    except Exception as err:
+        print(err)
+    if frds:
+        for frd in frds:
+            # utils.MysqlUtils.getSession('')
+            print('friend:%s - %s  - %s - %s - %s '%( frd.puid,frd.name,frd.sex,frd.province,frd.city ) )
+
+    try:
+        grps = bot.groups()
+    except Exception as err:
+        print(err)
+    if grps:
+        for grp in grps:
+            print('group:%s - %s   ' % (grp.puid, grp.name ))
+
 
 save_chater_to_db()
 
