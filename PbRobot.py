@@ -112,7 +112,7 @@ def superuser_reply(msg):
             for frd in qf_friends:
                 try:
                     frd.send(hymsg)
-                    time.sleep(15)
+                    time.sleep(30)
                 except Exception:
                     print()
                 finally:
@@ -127,7 +127,7 @@ def superuser_reply(msg):
             for grp in qf_groups:
                 try:
                     grp.send(hymsg)
-                    time.sleep(15)
+                    time.sleep(30)
                 except Exception:
                     print()
                 finally:
