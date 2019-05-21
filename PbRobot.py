@@ -643,7 +643,7 @@ def save_chater_to_db():
         print(err)
     if grps:
         for grp in grps:
-            print('group:%s - %s   ' % (grp.puid, grp.name ))
+            print('group:%s - %s  - %s - %s   ' % (grp.puid, grp.name, grp.owner.puid, grp.owner.name))
 
 
 save_chater_to_db()
