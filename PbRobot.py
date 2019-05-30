@@ -232,18 +232,24 @@ def text_msg_reply(msgtxt, isAt, toUser=None):
             return str
 
     # 没电影就用 图灵机器人 处理
-    # if isAt:
-    #     reply = qingyunke_robot(msgtxt)
-    #     return reply
+    if isAt:
+        reply = qingyunke_robot(msgtxt)
+        return reply
 
 
 # 青云客机器人，老骂人
 def qingyunke_robot(txt):
     url = "http://api.qingyunke.com/api.php?key=free&appid=0&msg=%s" % (txt)
     html = getHtmlText(url)
-    arrmsg = re.findall('0,"content":"([\s\S]*?)"}', html)
-    if arrmsg:
-        msg = arrmsg[0]
+
+    print('青云客：：：',html)
+
+    if html.find('{') < 0:
+        return
+
+    objqyk = json.loads(html)
+    if objqyk['result'] == 0:
+        msg = objqyk['content']
         msg = msg.replace('{br}', '\n')
     else:
         msg = ""
